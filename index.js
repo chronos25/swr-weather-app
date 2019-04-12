@@ -1,43 +1,59 @@
 const request = require('request');
 const express = require('express');
 const http = require('http');
+const bodyparser = require('body-parser');
 const hostname = 'localhost';
+const apiKey = '0cea40c25f813b12fa0dcaef8efa67e8'; 
 const app =express();
 
-var mustacheExpress= require('mustache-express');
-app.engine('html',mustacheExpress());
-app.set('view engine','html');
-app.set('views',__dirname+'/view');
 
-const port= 3000;
+app.set('view engine','ejs');
+app.use(express.static('public'));
+app.use(bodyparser.urlencoded({ extended: true }));
 
-
- app.get('/',(req,res)=>{
-const apiKey = '0cea40c25f813b12fa0dcaef8efa67e8';
-const {city} = req.query
-const url = `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`
-request(url, function (err, response, body) {
+app.get('/',function(req,res){
+	res.render('index');
+	 
+})
+app.post('/',function(req,res){
+	const {city} = req.body;
+	console.log(req.body);
+	const url = `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`;
+    console.log(url);
+	request(url, function (err, response, body) {
   if(err){
     console.log('error:', error);
     res.status(500)
-    res.send('Error');
+    res.render('index',{weather:null,error:"Error !! Try Again"});
   } else {
   	try{
-	  	const weather = JSON.parse(body);
+	  	let weather = JSON.parse(body);
+	  	console.log(weather.Title);
 	  	let temp =weather.main.temp;
 	  	temp-=273.15;
 	  	temp=temp.toFixed(2);
-	    message = `${temp} degrees in ${weather.name}!`;
-	    res.render('index.html',{message})
-	    console.log(message);
+	  	let desc= weather.main.humidity;
+	  	let min_temp= weather.main.temp_min;
+	  	let max_temp= weather.main.temp_max;
+	  	min_temp-=273.15; max_temp-=273.15;
+	  	min_temp=min_temp.toFixed(2);
+		max_temp=max_temp.toFixed(2);
+	  	let country = weather.sys.country;
+	  	let lon=weather.coord.lon;
+	  	let lat=weather.coord.lat;
+	   // let message = `${temp} degrees in ${weather.name}!`;
+	    res.render('index',{weather:`Temperature : ${temp} | City : ${weather.name} | Country :${country}`,country:`Humidity :${desc} | Max Temp : ${max_temp} | Min Temp :${min_temp}`,error:null});
+	     console.log(`${temp} degrees in ${weather.name}!`);
+	     console.log(country);
 	}catch(e){
-		res.send("Not Found")
+		console.error(e)
+		res.render('index',{weather:null,error:"Error !! Try Again"});
 	}
   }
 })
+})
+
+app.listen(3000,function(){
+	console.log("Started Successfully ");
 });
 
-
-
-app.listen(port)
- 
