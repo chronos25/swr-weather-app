@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title> Weather App </title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+  <link rel="stylesheet" type="text/javascript" href="index.js">
+</head>
+<body >
+  		<center>
+	  		<div id="main">
+	  		<h2> SWR Weather App </h2>
+	  		<h3> check weather condition of your city here </h3>
+	  		<fieldset>
+		  		<form  action="/" method="post">
+		  			City Name
+		  			<input type="text" name="city" placeholder="Eg: New Delhi" value=>
+		  			<input type="submit" id="firstbutton" name="submit" value="check !"> 
+		  		</form>
+		  		
+		  		<% if(weather !== null) { %>
+		  			<h4><%= weather %> </h4>
+				  	<%}%>
+				 <% if(country) { %>
+		  			<h5><%= country %> </h5>
+				  	<%}%>
+				 <% if(error !== null) { %>
+		  			<p><%= error %> </p>
+				  	<% } %>
+	 	   </fieldset>
+	  		</div>
+
+  		</center>
+
+  	<script type="text/javascript">
+  			function first(){
+					var bc= document.getElementById('main');
+						bc.style.backgroundColor='#316e86d1';
+						bc.style.color='white';
+							}
+
+  		</script> 
+</body>
+</html>
