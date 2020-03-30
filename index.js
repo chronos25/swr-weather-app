@@ -5,8 +5,7 @@ const bodyparser = require('body-parser');
 const hostname = 'localhost';
 const apiKey = '0cea40c25f813b12fa0dcaef8efa67e8'; 
 const app =express();
-
-
+const port = process.env.PORT || 3000;
 app.set('view engine','ejs');
 app.use(express.static('public'));
 app.use(bodyparser.urlencoded({ extended: true }));
@@ -53,7 +52,7 @@ app.post('/',function(req,res){
 })
 })
 
-app.listen(3000,function(){
+app.listen(port,function(){
 	console.log("Started Successfully ");
 });
 
